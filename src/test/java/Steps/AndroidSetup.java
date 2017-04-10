@@ -1,8 +1,11 @@
 package Steps;
 
+import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.SessionId;
 import org.testng.annotations.AfterClass;
@@ -75,8 +78,17 @@ public  class AndroidSetup {
     }
 
     @After
-    public static void afterScenario(){
+    public static void afterScenario(Scenario scenario){
+        //take screenshot
+        if(scenario.isFailed()){
+            final byte[] screenshot = takeScreenshot();
+            scenario.embed(screenshot,"image/png");
+        }
         stopDriver();
+    }
+
+    public static byte[] takeScreenshot(){
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
 
